@@ -1,0 +1,24 @@
+{
+  "name": "hellothreejs",
+  "description": "Mucking about with threejs",
+  "main": "index.js",
+  "authors": [
+    "Leo"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "blah"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs": "^2.2.0",
+    "three.js": "^0.78.0"
+  }
+}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="bower_components/requirejs/require.js"></script>
+	<script type="text/javascript">
+		require.config({
+			baseUrl: './bower_components/',
+			packages: [
+				{
+					name: 'threejs',
+					location: 'three.js',
+					main: 'three.min.js'
+				}
+			]
+		});
+	</script>
+	<style>
+		body{
+			margin: 0;
+		}
+		canvas{
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<h1>I'm super lazy but idc</h1>
+	<script>
+		document.addEventListener("DOMContentLoaded", function(){
+			console.log("DOM loaded.");
+			init();
+		}, false);
+
+		function init(){
+			require(['threejs'], function(_three){
+
+				function rotateAroundAxis(object, axis, radians){
+					rotObjectMatrix = new THREE.Matrix4();
+				    rotObjectMatrix.makeRotationAxis(axis.normalize(), radians);
+
+				    // old code for Three.JS pre r54:
+				    // object.matrix.multiplySelf(rotObjectMatrix);      // post-multiply
+				    // new code for Three.JS r55+:
+				    object.matrix.multiply(rotObjectMatrix);
+
+				    // old code for Three.js pre r49:
+				    // object.rotation.getRotationFromMatrix(object.matrix, object.scale);
+				    // old code for Three.js r50-r58:
+				    // object.rotation.setEulerFromRotationMatrix(object.matrix);
+				    // new code for Three.js r59+:
+				    object.rotation.setFromRotationMatrix(object.matrix);
+				}
+
+				var scene = new THREE.Scene();
+				var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+				var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+				scene.add( light );
+
+				var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+				var material = new THREE.MeshStandardMaterial( { color: 0x00ff00 } );
+				var cube = new THREE.Mesh( geometry, material );
+				scene.add( cube );
+
+				var pl_geometry = new THREE.PlaneGeometry( 5, 20, 32 );
+				var pl_material = new THREE.MeshStandardMaterial({color: 0xee8800});
+				var plane = new THREE.Mesh(pl_geometry, pl_material);
+
+				rotateAroundAxis(plane, new THREE.Vector3(1,0,0), -Math.PI / 3 );
+				plane.translateZ(-2);
+				plane.scale.x = 2;
+
+				scene.add(plane);
+
+				camera.position.z = 5;
+
+				var renderer = new THREE.WebGLRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				var dt = 0;
+
+				var lastTime = 0;
+
+				var plsx_i = 0;
+
+				function render(){
+					requestAnimationFrame(render);
+					renderer.render(scene, camera);
+					cube.rotation.x += 0.01;
+					cube.rotation.y += 0.02;
+
+					var currTime = new Date().getTime();
+					var dt = Math.max(0, (currTime - lastTime));
+					lastTime = currTime + dt;
+
+					plane.scale.x = 2 + Math.sin(plsx_i);
+					plane.scale.y = 2 + Math.cos(plsx_i);
+					plsx_i += 0.001 * dt;
+				}
+
+				render();
+			});
+		}
+	</script>
+</body>
+</html>
