@@ -69,8 +69,9 @@
 				var pl_material = new THREE.MeshStandardMaterial({color: 0xee8800});
 				var plane = new THREE.Mesh(pl_geometry, pl_material);
 
-				rotateAroundAxis(plane, new THREE.Vector3(1,0,0), -Math.PI / 3 );
-				plane.translateZ(-2);
+				//rotateAroundAxis(plane, new THREE.Vector3(1,0,0), -Math.PI / 3 );
+				plane.translateZ(-3);
+				plane.rotation.x = -Math.PI / 2.9;
 				plane.scale.x = 2;
 
 				scene.add(plane);
@@ -90,16 +91,14 @@
 				function render(){
 					requestAnimationFrame(render);
 					renderer.render(scene, camera);
-					cube.rotation.x += 0.01;
-					cube.rotation.y += 0.02;
+					
 
 					var currTime = new Date().getTime();
 					var dt = Math.max(0, (currTime - lastTime));
 					lastTime = currTime + dt;
 
-					plane.scale.x = 2 + Math.sin(plsx_i);
-					plane.scale.y = 2 + Math.cos(plsx_i);
-					plsx_i += 0.001 * dt;
+					cube.rotation.x += 0.003 * dt;
+					cube.rotation.y += 0.004 * dt;
 				}
 
 				render();
